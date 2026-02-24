@@ -1,1 +1,13 @@
-{"name":"scrapscout","version":"1.0.0","scripts":{"start":"expo start"}}
+{
+  "name": "scrapscout",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "expo start"
+  },
+  "dependencies": {
+    "expo": "^54.0.33",
+    "react": "^19.2.4",
+    "react-native": "^0.84.0",
+    "react-native-maps": "1.20.1"
+  }
+}
