@@ -1,0 +1,167 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: {uid}
+    // Fields:
+    //   - uid: string (required) - User ID
+    //   - email: string (required, email format) - User email
+    //   - displayName: string (optional) - User display name
+    //   - photoURL: string (optional) - User photo URL
+    //   - legalMode: string (enum: ['legal_only', 'permission_hunter', 'all']) - Legal mode setting
+    //   - searchRadius: number (optional) - Search radius setting
+    //   - notificationsEnabled: boolean (optional) - Notifications setting
+    //   - subscriptionStatus: string (enum: ['inactive', 'pro', 'founder']) - Subscription status
+    //   - createdAt: string (date-time format) - Creation timestamp
+    //
+    // Collection: inventory
+    // Document ID: {itemId}
+    // Fields:
+    //   - id: string (required) - Item ID
+    //   - uid: string (required) - Owner UID
+    //   - item_name: string (required, max 100) - Item name
+    //   - material: string (optional) - Item material
+    //   - condition: string (optional) - Item condition
+    //   - estimated_value_low: number (optional) - Low estimate
+    //   - estimated_value_high: number (optional) - High estimate
+    //   - resale_value: number (optional) - Resale value
+    //   - scrap_value: number (optional) - Scrap value
+    //   - status: string (enum: ['found', 'saved', 'sold']) - Item status
+    //   - created_at: string (date-time format) - Creation timestamp
+    //
+    // Collection: tasks
+    // Document ID: {taskId}
+    // Fields:
+    //   - id: string (required) - Task ID
+    //   - uid: string (required) - Owner UID
+    //   - title: string (required, max 200) - Task title
+    //   - description: string (optional, max 1000) - Task description
+    //   - dueDate: string (optional) - Due date
+    //   - priority: string (enum: ['low', 'medium', 'high']) - Task priority
+    //   - completed: boolean (required) - Completion status
+    //   - createdAt: string (date-time format) - Creation timestamp
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.uid;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+          (request.auth.token.email == "bericrevel@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function uidUnchanged() {
+      return !('uid' in request.resource.data) || request.resource.data.uid == request.auth.uid;
+    }
+
+    function uidNotModified() {
+      return !('uid' in request.resource.data) || request.resource.data.uid == resource.data.uid;
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function isValidDateString(dateStr) {
+      return dateStr is string && dateStr.matches("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.*Z?$");
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    function roleUnchanged() {
+      return !('role' in request.resource.data) || request.resource.data.role == resource.data.role;
+    }
+
+    function isValidUser(data) {
+      return hasOnlyAllowedFields(['uid', 'email', 'displayName', 'photoURL', 'role', 'legalMode', 'searchRadius', 'notificationsEnabled', 'subscriptionStatus', 'createdAt']) &&
+             data.uid == request.auth.uid &&
+             isValidEmail(data.email) &&
+             (!('role' in data) || data.role in ['admin', 'user']) &&
+             (data.legalMode in ['legal_only', 'permission_hunter', 'all']) &&
+             (data.subscriptionStatus in ['inactive', 'pro', 'founder']) &&
+             isValidDateString(data.createdAt);
+    }
+
+    function isValidScannedItem(data) {
+      return hasOnlyAllowedFields(['id', 'uid', 'image_url', 'item_name', 'material', 'condition', 'repair_needs', 'extracted_text', 'estimated_value_low', 'estimated_value_high', 'resale_value', 'scrap_value', 'bounding_box', 'status', 'created_at']) &&
+             data.uid == request.auth.uid &&
+             data.item_name is string && data.item_name.size() <= 100 &&
+             (!('repair_needs' in data) || (data.repair_needs is string && data.repair_needs.size() <= 500)) &&
+             (!('extracted_text' in data) || (data.extracted_text is string && data.extracted_text.size() <= 2000)) &&
+             (!('bounding_box' in data) || (data.bounding_box is list && data.bounding_box.size() == 4)) &&
+             (data.status in ['found', 'saved', 'sold']) &&
+             isValidDateString(data.created_at);
+    }
+
+    function isValidTask(data) {
+      return hasOnlyAllowedFields(['id', 'uid', 'title', 'description', 'dueDate', 'priority', 'completed', 'createdAt']) &&
+             data.uid == request.auth.uid &&
+             data.title is string && data.title.size() <= 200 &&
+             (!('description' in data) || (data.description is string && data.description.size() <= 1000)) &&
+             (data.priority in ['low', 'medium', 'high']) &&
+             data.completed is bool &&
+             isValidDateString(data.createdAt);
+    }
+
+    // ===============================================================
+    // Match Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId) && isValidUser(request.resource.data) && (request.resource.data.role == 'user' || isAdmin());
+      allow update: if isOwner(userId) && isValidUser(request.resource.data) && uidNotModified() && (roleUnchanged() || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    match /inventory/{itemId} {
+      allow read: if isDocOwner() || isAdmin();
+      allow create: if isAuthenticated() && isValidScannedItem(request.resource.data);
+      allow update: if isDocOwner() && isValidScannedItem(request.resource.data) && uidNotModified();
+      allow delete: if isDocOwner() || isAdmin();
+    }
+
+    match /tasks/{taskId} {
+      allow read: if isDocOwner() || isAdmin();
+      allow create: if isAuthenticated() && isValidTask(request.resource.data);
+      allow update: if isDocOwner() && isValidTask(request.resource.data) && uidNotModified();
+      allow delete: if isDocOwner() || isAdmin();
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and settings",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "user"] },
+        "legalMode": { "type": "string", "enum": ["legal_only", "permission_hunter", "all"] },
+        "searchRadius": { "type": "number" },
+        "notificationsEnabled": { "type": "boolean" },
+        "subscriptionStatus": { "type": "string", "enum": ["inactive", "pro", "founder"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    },
+    "ScannedItem": {
+      "title": "ScannedItem",
+      "description": "An item scanned by the user",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "uid": { "type": "string" },
+        "image_url": { "type": "string" },
+        "item_name": { "type": "string" },
+        "material": { "type": "string" },
+        "condition": { "type": "string" },
+        "repair_needs": { "type": "string" },
+        "extracted_text": { "type": "string" },
+        "estimated_value_low": { "type": "number" },
+        "estimated_value_high": { "type": "number" },
+        "resale_value": { "type": "number" },
+        "scrap_value": { "type": "number" },
+        "bounding_box": { "type": "array", "items": { "type": "number" } },
+        "status": { "type": "string", "enum": ["found", "saved", "sold"] },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "uid", "item_name", "created_at"]
+    },
+    "Task": {
+      "title": "Task",
+      "description": "A task for the user",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "uid": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "dueDate": { "type": "string", "format": "date-time" },
+        "priority": { "type": "string", "enum": ["low", "medium", "high"] },
+        "completed": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "uid", "title", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "User",
+      "description": "User profile and settings"
+    },
+    "/inventory/{itemId}": {
+      "schema": "ScannedItem",
+      "description": "Items scanned by users"
+    },
+    "/tasks/{taskId}": {
+      "schema": "Task",
+      "description": "User tasks"
+    }
+  }
+}

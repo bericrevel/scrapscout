@@ -1,0 +1,9 @@
+{
+  "name": "Copy of ScrapScout",
+  "description": "A sci-fi themed AI hub featuring Gemini\u0027s multimodal capabilities.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}

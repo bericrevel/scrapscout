@@ -1,0 +1,9 @@
+# Google Play
+package_name("com.bericrevel.scrapscout")
+json_key_file("fastlane/google-play-key.json")
+
+# App Store (iOS — requires Mac + Xcode)
+# app_identifier("com.bericrevel.scrapscout")
+# apple_id("your@apple.id")
+# itc_team_id("YOUR_ITC_TEAM_ID")
+# team_id("YOUR_TEAM_ID")

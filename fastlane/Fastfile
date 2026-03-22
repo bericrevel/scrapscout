@@ -1,0 +1,60 @@
+default_platform(:android)
+
+platform :android do
+
+  desc "Build and upload to Google Play Internal Testing track"
+  lane :internal do
+    # Build the Vite frontend
+    sh("cd .. && npm run build")
+    # Sync Capacitor
+    sh("cd .. && npx cap sync android")
+    # Build signed release AAB (preferred by Play Store over APK)
+    gradle(
+      project_dir: "android",
+      task: "bundle",
+      build_type: "Release",
+      properties: {
+        "android.injected.signing.store.file"     => ENV["KEYSTORE_PATH"],
+        "android.injected.signing.store.password" => ENV["KEYSTORE_PASSWORD"],
+        "android.injected.signing.key.alias"      => ENV["KEY_ALIAS"],
+        "android.injected.signing.key.password"   => ENV["KEY_PASSWORD"],
+      }
+    )
+    # Upload to Play Store internal testing track
+    upload_to_play_store(
+      track: "internal",
+      aab: "android/app/build/outputs/bundle/release/app-release.aab",
+      skip_upload_metadata: false,
+      skip_upload_images: false,
+      skip_upload_screenshots: false,
+    )
+  end
+
+  desc "Promote internal build to production"
+  lane :promote_to_production do
+    upload_to_play_store(
+      track: "internal",
+      track_promote_to: "production",
+      package_name: "com.bericrevel.scrapscout",
+    )
+  end
+
+  desc "Build APK only (no upload)"
+  lane :build_apk do
+    sh("cd .. && npm run build")
+    sh("cd .. && npx cap sync android")
+    gradle(
+      project_dir: "android",
+      task: "assemble",
+      build_type: "Release",
+      properties: {
+        "android.injected.signing.store.file"     => ENV["KEYSTORE_PATH"],
+        "android.injected.signing.store.password" => ENV["KEYSTORE_PASSWORD"],
+        "android.injected.signing.key.alias"      => ENV["KEY_ALIAS"],
+        "android.injected.signing.key.password"   => ENV["KEY_PASSWORD"],
+      }
+    )
+    puts "APK built: android/app/build/outputs/apk/release/app-release.apk"
+  end
+
+end
