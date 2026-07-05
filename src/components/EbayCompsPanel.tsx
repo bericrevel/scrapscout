@@ -67,8 +67,8 @@ export default function EbayCompsPanel({ query }: { query: string }) {
   if (comps.count === 0) {
     return (
       <div className="bg-panel border border-edge rounded-xl p-4 text-sm text-faint">
-        No live eBay listings matched "{comps.query || query}". Rarer than it looks — or worth
-        trying different words.{" "}
+        No live eBay listings matched "{query}". Rarer than it looks — or worth trying different
+        words.{" "}
         <button onClick={() => Browser.open({ url: comps.searchUrl })} className="underline text-mist">
           Search eBay directly
         </button>
