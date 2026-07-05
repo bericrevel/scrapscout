@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Privacy Policy — ScrapScout</title>
+<style>
+  :root { --ink:#0A0E1A; --panel:#111827; --edge:#1F2937; --mist:#B8C0CC; --faint:#7A8494; --scout:#4ADE80; --amber:#FBBF24; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--ink); color:var(--mist); font-family:system-ui,-apple-system,"Segoe UI",sans-serif; font-size:16px; line-height:1.6; }
+  .wrap { max-width:680px; margin:0 auto; padding:40px 6% 70px; }
+  h1 { font-size:30px; line-height:1.15; margin:0 0 6px; color:#fff; }
+  .date { color:var(--faint); font-size:14px; margin-bottom:26px; }
+  h2 { font-size:20px; margin:34px 0 10px; color:#fff; }
+  p, li { margin:0 0 12px; }
+  li { margin-bottom:6px; }
+  b { color:#fff; }
+  a { color:var(--scout); }
+  ul { padding-left:22px; margin:0 0 12px; }
+  .short { background:var(--panel); border:1px solid var(--edge); border-radius:12px; padding:18px 20px; margin:0 0 10px; }
+  .short p { margin:0 0 8px; } .short p:last-child { margin:0; }
+  .never { background:rgba(74,222,128,0.08); border:1px solid var(--scout); border-radius:12px; padding:16px 20px; margin:14px 0; }
+  .never b { color:var(--scout); }
+  table { width:100%; border-collapse:collapse; font-size:14.5px; margin:10px 0 6px; }
+  th { text-align:left; padding:8px 10px 8px 0; border-bottom:2px solid var(--scout); font-size:13px; text-transform:uppercase; letter-spacing:.04em; color:#fff; }
+  td { padding:9px 10px 9px 0; border-bottom:1px solid var(--edge); vertical-align:top; }
+  td:first-child { color:#fff; font-weight:600; white-space:nowrap; }
+  footer { margin-top:40px; padding-top:16px; border-top:2px solid var(--edge); font-size:13.5px; color:var(--faint); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Privacy Policy</h1>
+  <div class="date">ScrapScout · Effective July 2026</div>
+
+  <div class="short">
+    <p><b>The short version:</b> you point your camera at junk, we send that one photo to an AI
+    to price it, and then it's gone. Your inventory, your pins, your plan, and your chat live on
+    your phone. We don't run ads, we don't sell data, and we can't see your card number.</p>
+    <p>That's the whole story. The details below just say it slower.</p>
+  </div>
+
+  <h2>What leaves your phone, and why</h2>
+  <table>
+    <tr><th>Data</th><th>When</th><th>Where it goes</th></tr>
+    <tr>
+      <td>A photo</td>
+      <td>Only when you tap SCAN IT or pick from gallery</td>
+      <td>Encrypted to our server, passed to Anthropic's AI to identify and value the item. We
+      don't store it — it answers your question and it's gone from our systems.</td>
+    </tr>
+    <tr>
+      <td>Chat messages</td>
+      <td>When you ask the scout something</td>
+      <td>Sent to our server and Anthropic's AI to answer. Your conversation history is stored on
+      your phone only, and you can clear it anytime.</td>
+    </tr>
+    <tr>
+      <td>Your coordinates</td>
+      <td>Only when you tap MY LOCATION (or search a city)</td>
+      <td>Sent directly to OpenStreetMap services (Overpass, Nominatim) to find scrap yards and
+      places near you. Never sent to our server, never stored by us. Typing a city instead of
+      using GPS works fully — location permission is always optional.</td>
+    </tr>
+    <tr>
+      <td>An item name</td>
+      <td>Only when you tap "Check real eBay asks"</td>
+      <td>Sent to eBay's public search API to fetch live listings. Just the item words — nothing
+      about you.</td>
+    </tr>
+    <tr>
+      <td>An anonymous device ID</td>
+      <td>Created on first launch</td>
+      <td>A random ID (nothing about you or your phone) used to check whether this device has a
+      Pro subscription. Stored with your subscription record at Stripe.</td>
+    </tr>
+    <tr>
+      <td>Your email</td>
+      <td>Only if you use "Restore my Pro"</td>
+      <td>Used once to find your subscription at Stripe and reconnect it. We keep no copy —
+      Stripe already has it from your own checkout.</td>
+    </tr>
+  </table>
+
+  <div class="never">
+    <p><b>What never leaves your phone:</b> your inventory and every dollar you log, your map
+    pins, your plan and reminders, your yard notes and logged prices, and your chat history.
+    We can't see any of it. Deleting the app deletes it.</p>
+  </div>
+
+  <h2>What we don't do</h2>
+  <ul>
+    <li><b>No ads</b> and no advertising trackers.</li>
+    <li><b>No selling or renting data.</b> Not to anyone, not ever.</li>
+    <li><b>No analytics SDKs</b> tracking what you do in the app.</li>
+    <li><b>No background location.</b> GPS is read only in the moment you ask, only to search near you.</li>
+    <li><b>No accounts, no passwords.</b> There's nothing to sign up for.</li>
+  </ul>
+
+  <h2>About the AI</h2>
+  <p>Item identification, values, guides, listings, and chat answers are generated by Claude
+  (Anthropic) under commercial API terms that don't use this data to train models; Anthropic may
+  retain API data briefly for abuse monitoring before deletion — see
+  <a href="https://www.anthropic.com/legal/privacy" rel="noopener noreferrer">Anthropic's privacy policy</a>.
+  Values are estimates, not appraisals, and the app says so wherever they appear. eBay figures
+  shown are live <i>asking</i> prices from eBay's public API — the app never invents market data.</p>
+  <p>One honest caution that's also in the app: AI estimates and guidance can be wrong. Use your
+  judgment, especially around anything electrical, fuel-powered, or sharp — and around the law
+  guide, which is orientation, not legal advice.</p>
+
+  <h2>Payments</h2>
+  <p>ScrapScout Pro payments are handled entirely by
+  <a href="https://stripe.com/privacy" rel="noopener noreferrer">Stripe</a>, on Stripe's own
+  checkout page in your browser. Your card number never touches this app or our servers. Cancel
+  anytime from "Manage / cancel subscription" in the app.</p>
+
+  <h2>Deleting your data</h2>
+  <ul>
+    <li><b>On your phone:</b> uninstalling permanently deletes your inventory, pins, plan, notes,
+    chat, and device ID.</li>
+    <li><b>At Stripe:</b> if you subscribed and want billing records deleted, email us from your
+    checkout email — subject to records we must legally keep (like tax records of payments).</li>
+    <li><b>Photos and chats:</b> nothing to delete — we don't store them.</li>
+  </ul>
+
+  <h2>Security</h2>
+  <p>Everything the app sends travels over encrypted connections (HTTPS). Our AI, eBay, and
+  billing keys live on our servers, never inside the app.</p>
+
+  <h2>Children</h2>
+  <p>ScrapScout is not directed at children under 13, and we don't knowingly collect personal
+  information from them.</p>
+
+  <h2>Changes</h2>
+  <p>If this policy changes in any way that matters, we'll update this page and the date above.
+  We won't quietly get worse.</p>
+
+  <footer>
+    <p><b>Contact:</b> support@aerkatech.com<br />
+    ScrapScout is built by Ærk-A-Tech — sibling of JunkGenius CashScan.</p>
+  </footer>
+</div>
+</body>
+</html>
